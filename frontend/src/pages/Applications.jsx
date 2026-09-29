@@ -17,7 +17,7 @@ import {
 
 import "./Applications.css";
 
-const API_URL = "http://localhost:8081";
+const API_URL = "https://legendary-umbrella-vxrp4jvwgrj3wvp4-8000.app.github.dev";
 
 function Applications() {
   const [applications, setApplications] = useState([]);

@@ -25,6 +25,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        "https://legendary-umbrella-vxrp4jvwgrj3wvp4-5173.app.github.dev",
     ],
 
     allow_credentials=True,

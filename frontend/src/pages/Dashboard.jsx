@@ -18,7 +18,7 @@ import {
 
 import "./Dashboard.css";
 
-const API_URL = "http://localhost:8081";
+const API_URL = "https://legendary-umbrella-vxrp4jvwgrj3wvp4-8000.app.github.dev";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -243,7 +243,7 @@ function Dashboard() {
               />
             ) : (
               <div className="avatar-placeholder">
-                <Github size={20} />
+                <GitBranch size={20} />
               </div>
             )}
 

@@ -12,7 +12,7 @@ function Login() {
     const checkAuthentication = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8081/api/auth/github/me",
+          "https://legendary-umbrella-vxrp4jvwgrj3wvp4-8000.app.github.dev/api/auth/github/me",
           {
             method: "GET",
             credentials: "include",
@@ -42,7 +42,7 @@ function Login() {
 
   const handleGithubLogin = () => {
     window.location.href =
-      "http://localhost:8081/api/auth/github/login";
+      "https://legendary-umbrella-vxrp4jvwgrj3wvp4-8000.app.github.dev/api/auth/github/login";
   };
 
   /* Loading screen */
