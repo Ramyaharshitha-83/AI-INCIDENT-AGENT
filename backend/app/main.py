@@ -6,6 +6,7 @@ from app.routes.memory import router as memory_router
 from app.routes.incidents import router as incidents_router
 from app.routes.ai import router as ai_router
 from app.routes.applications import router as applications_router
+from app.routes.remediation import router as remediation_router
 
 
 app = FastAPI(
@@ -45,6 +46,7 @@ app.include_router(memory_router)
 app.include_router(incidents_router)
 app.include_router(ai_router)
 app.include_router(applications_router)
+app.include_router(remediation_router)
 
 
 @app.get("/")

@@ -466,3 +466,134 @@ def get_repository_file(
         "size": file_data.get("size"),
         "content": content,
     }
+
+    # ============================================================
+# UPDATE SINGLE REPOSITORY FILE
+# ============================================================
+
+def update_repository_file(
+    repository_url: str,
+    github_token: str,
+    file_path: str,
+    content: str,
+    commit_message: str,
+    branch: str | None = None,
+):
+    owner, repository = parse_github_repository_url(
+        repository_url
+    )
+
+    if not is_safe_file(file_path):
+        raise ValueError(
+            f"Access to repository file is not allowed: {file_path}"
+        )
+
+    headers = {
+        "Authorization": f"Bearer {github_token}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": "AI-Incident-Response-Agent",
+    }
+
+    # Get default branch when one was not supplied
+    if not branch:
+        repository_api_url = (
+            f"{GITHUB_API}/repos/"
+            f"{owner}/{repository}"
+        )
+
+        response = requests.get(
+            repository_api_url,
+            headers=headers,
+            timeout=15,
+        )
+
+        if response.status_code != 200:
+            raise ValueError(
+                f"GitHub repository request failed: "
+                f"{response.status_code} - "
+                f"{response.text[:500]}"
+            )
+
+        repo_data = response.json()
+        branch = repo_data.get("default_branch")
+
+        if not branch:
+            raise ValueError(
+                "GitHub repository has no default branch"
+            )
+
+    encoded_path = quote(
+        file_path,
+        safe="/"
+    )
+
+    url = (
+        f"{GITHUB_API}/repos/"
+        f"{owner}/{repository}/contents/"
+        f"{encoded_path}"
+    )
+
+    # Get the current file so GitHub can verify its SHA
+    response = requests.get(
+        url,
+        params={"ref": branch},
+        headers=headers,
+        timeout=20,
+    )
+
+    if response.status_code != 200:
+        raise ValueError(
+            f"GitHub file request failed: "
+            f"{response.status_code} - "
+            f"{response.text[:500]}"
+        )
+
+    file_data = response.json()
+    current_sha = file_data.get("sha")
+
+    if not current_sha:
+        raise ValueError(
+            "Could not determine current file SHA"
+        )
+
+    import base64
+
+    encoded_content = base64.b64encode(
+        content.encode("utf-8")
+    ).decode("utf-8")
+
+    payload = {
+        "message": commit_message,
+        "content": encoded_content,
+        "sha": current_sha,
+        "branch": branch,
+    }
+
+    response = requests.put(
+        url,
+        headers=headers,
+        json=payload,
+        timeout=30,
+    )
+
+    if response.status_code in (401, 403):
+        raise ValueError(
+            "GitHub denied permission to modify the repository."
+        )
+
+    if response.status_code != 200:
+        raise ValueError(
+            f"GitHub file update failed: "
+            f"{response.status_code} - "
+            f"{response.text[:500]}"
+        )
+
+    result = response.json()
+
+    return {
+        "path": file_path,
+        "branch": branch,
+        "commit": result.get("commit", {}).get("sha"),
+        "message": commit_message,
+    }
