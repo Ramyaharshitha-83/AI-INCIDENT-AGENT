@@ -8,8 +8,8 @@ from app.services.repository import (
 # LIMITS
 # ============================================================
 
-MAX_FILES_TO_ANALYZE = 15
-MAX_FILE_CONTENT_LENGTH = 30_000
+MAX_FILES_TO_ANALYZE = 8
+MAX_FILE_CONTENT_LENGTH = 8_000
 
 
 # ============================================================
