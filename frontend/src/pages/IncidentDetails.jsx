@@ -111,6 +111,7 @@ function IncidentDetails() {
       setAnalysis(null);
 
       const payload = {
+        application_id: application?.id,
         service: form.service,
         latencyMs: Number(form.latencyMs),
         errorRate: Number(form.errorRate),
@@ -133,6 +134,7 @@ function IncidentDetails() {
             "Content-Type": "application/json",
           },
 
+          credentials: "include",
           body: JSON.stringify(payload),
         }
       );
