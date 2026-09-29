@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, Request
+import traceback
 
 from app.models.incident import IncidentAnalysisRequest
 from app.services.incident_analysis import IncidentAnalysisService
@@ -38,6 +39,7 @@ def analyze_incident(
         )
 
     except Exception as e:
+        traceback.print_exc()
         raise HTTPException(
             status_code=500,
             detail=str(e)

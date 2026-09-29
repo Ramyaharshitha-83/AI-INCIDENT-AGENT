@@ -54,5 +54,9 @@ class LLMService:
         response.raise_for_status()
 
         data = response.json()
+        if "choices" not in data:
+            raise ValueError(
+            f"OpenRouter response did not contain choices: {data}"
+        )
 
         return data["choices"][0]["message"]["content"]

@@ -9,6 +9,7 @@ from app.services.repository_context import (
     get_relevant_repository_context,
 )
 
+
 class IncidentAnalysisService:
 
     def __init__(self):
@@ -179,7 +180,7 @@ CURRENT INCIDENT:
 
 APPLICATION:
 
-{json.dumps(application, indent=2)}
+{json.dumps(application, indent=2,default=str)}
 
 REPOSITORY CONTEXT:
 
@@ -209,6 +210,10 @@ Finally provide the diagnosis and recommended next action.
         # ----------------------------------------------------
         # LLM analysis
         # ----------------------------------------------------
+
+        print("REPOSITORY CONTEXT LENGTH:", len(json.dumps(repository_context)))
+        print("HISTORICAL MEMORY LENGTH:", len(json.dumps(historical_memory)))
+        print("USER PROMPT LENGTH:", len(user_prompt))
 
         llm_response = self.llm.analyze(
             system_prompt,
