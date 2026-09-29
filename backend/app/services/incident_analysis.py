@@ -136,6 +136,10 @@ IMPORTANT RULES:
 - If repository evidence cannot explain the incident,
   explicitly state that external evidence is required.
 - Any remediation action requires human approval.
+- The proposedFix must describe a specific, repository-supported change.
+- Do not invent code changes that are not supported by repository evidence.
+- Do not execute the proposed fix automatically.
+- proposedFix.requiresApproval must always be true.
 
 Return ONLY valid JSON.
 
@@ -168,6 +172,15 @@ Use exactly this structure:
     "reason": "string",
     "requiresApproval": true
   }
+  "proposedFix": {
+  "type": "string",
+  "targetFile": "string",
+  "description": "string",
+  "changes": [
+    "string"
+  ],
+  "requiresApproval": true
+}
 }
 
 The confidence value must be between 0 and 1.
